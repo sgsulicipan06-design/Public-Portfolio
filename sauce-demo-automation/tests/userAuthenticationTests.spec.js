@@ -25,6 +25,18 @@ test.describe('User Authentication Tests', () => {
       errorMessage = await loginPage.getErrorMessage();
       expect(errorMessage).toContain('Epic sadface: Username is required');
 
+      await loginPage.login('standard_user', '');
+      errorMessage = await loginPage.getErrorMessage();
+      expect(errorMessage).toContain('Epic sadface: Password is required');
+
+      await loginPage.login('standard_user', 'wrong_password');
+      errorMessage = await loginPage.getErrorMessage();
+      expect(errorMessage).toContain('Epic sadface: Username and password do not match any user in this service');
+
+      await loginPage.login('invalid_user', 'secret_sauce');
+      errorMessage = await loginPage.getErrorMessage();
+      expect(errorMessage).toContain('Epic sadface: Username and password do not match any user in this service');      
+
       await loginPage.login('locked_out_user', 'secret_sauce');
       errorMessage = await loginPage.getErrorMessage();
       expect(errorMessage).toContain('Epic sadface: Sorry, this user has been locked out.');
